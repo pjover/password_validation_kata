@@ -4,7 +4,25 @@ import (
 	"unicode"
 )
 
-func ValidatePassword(password string) bool {
+type Validation uint
+
+const (
+	One Validation = iota
+	Two
+)
+
+func ValidatePassword(validation Validation, password string) bool {
+	switch validation {
+	case One:
+		return validation1(password)
+	case Two:
+		return validation2(password)
+	}
+
+	return false
+}
+
+func validation1(password string) bool {
 	if len(password) < 8 {
 		return false
 	}
@@ -17,6 +35,20 @@ func ValidatePassword(password string) bool {
 	}
 
 	if !check_underscore(password) {
+		return false
+	}
+	return check_contains_digit(password)
+}
+
+func validation2(password string) bool {
+	if len(password) < 7 {
+		return false
+	}
+	if !check_upper(password) {
+		return false
+	}
+
+	if !check_lower(password) {
 		return false
 	}
 	return check_contains_digit(password)
