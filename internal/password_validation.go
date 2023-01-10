@@ -9,6 +9,7 @@ type Validation uint
 const (
 	One Validation = iota
 	Two
+	Three
 )
 
 func ValidatePassword(validation Validation, password string) bool {
@@ -17,6 +18,8 @@ func ValidatePassword(validation Validation, password string) bool {
 		return validation1(password)
 	case Two:
 		return validation2(password)
+	case Three:
+		return validation3(password)
 	}
 
 	return false
@@ -52,6 +55,19 @@ func validation2(password string) bool {
 		return false
 	}
 	return check_contains_digit(password)
+}
+func validation3(password string) bool {
+	if len(password) < 17 {
+		return false
+	}
+	if !check_upper(password) {
+		return false
+	}
+
+	if !check_lower(password) {
+		return false
+	}
+	return check_underscore(password)
 }
 
 func check_contains_digit(password string) bool {
