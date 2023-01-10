@@ -66,6 +66,24 @@ func TestValidatePassword(t *testing.T) {
 			password:   "Ab3fff",
 			want:       false,
 		},
+		{
+			name:       "Lacks capital letter",
+			validation: Two,
+			password:   "ab3ffwf",
+			want:       false,
+		},
+		{
+			name:       "Lacks lowercase",
+			validation: Two,
+			password:   "AB3FFFH",
+			want:       false,
+		},
+		{
+			name:       "Lacks number",
+			validation: Two,
+			password:   "ABxFFFH",
+			want:       false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
