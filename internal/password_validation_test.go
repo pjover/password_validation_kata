@@ -23,9 +23,7 @@ func TestValidatePassword(t *testing.T) {
 			name:       "7 characters",
 			validation: One,
 			password:   "Ul_234",
-			want: []error{
-				errors.New("invalid length"),
-			},
+			want:       []error{},
 		},
 		{
 			name:       "With capital letter",
@@ -37,7 +35,7 @@ func TestValidatePassword(t *testing.T) {
 			name:       "Without capital letter",
 			validation: One,
 			password:   "test_capital0",
-			want:       []error{errors.New("an upper case char is required")},
+			want:       []error{},
 		},
 		{
 			name:       "With lowercase letter",
@@ -49,16 +47,21 @@ func TestValidatePassword(t *testing.T) {
 			name:       "Without lowercase letter",
 			validation: One,
 			password:   "AA_0AAAAAA",
-			want: []error{
-				errors.New("a lower case char is required"),
-			},
+			want:       []error{},
 		},
 		{
 			name:       "Without lowercase letter",
 			validation: One,
 			password:   "A_0AAAAAAAA",
+			want:       []error{},
+		},
+		{
+			name:       "Validation 3",
+			validation: One,
+			password:   "abfffwfasfdolksff0j",
 			want: []error{
-				errors.New("a lower case char is required"),
+				errors.New("an upper case char is required"),
+				errors.New("an underscore char is required"),
 			},
 		},
 		{
@@ -71,31 +74,34 @@ func TestValidatePassword(t *testing.T) {
 			name:       "6 or less chars",
 			validation: Two,
 			password:   "Ab3fff",
-			want: []error{
-				errors.New("invalid length"),
-			},
+			want:       []error{},
 		},
 		{
 			name:       "Lacks capital letter",
 			validation: Two,
 			password:   "ab3ffwf",
-			want: []error{
-				errors.New("an upper case char is required"),
-			},
+			want:       []error{},
 		},
 		{
 			name:       "Lacks lowercase",
 			validation: Two,
 			password:   "AB3FFFH",
-			want: []error{
-				errors.New("a lower case char is required"),
-			},
+			want:       []error{},
 		},
 		{
 			name:       "Lacks number",
 			validation: Two,
 			password:   "ABxFFFH",
-			want:       []error{errors.New("a digit is required")},
+			want:       []error{},
+		},
+		{
+			name:       "Validation 3",
+			validation: Two,
+			password:   "abfffwfasfdolksffj",
+			want: []error{
+				errors.New("an upper case char is required"),
+				errors.New("a digit is required"),
+			},
 		},
 		{
 			name:       "More than 16 chars",
@@ -107,23 +113,28 @@ func TestValidatePassword(t *testing.T) {
 			name:       "Lacks uppercase",
 			validation: Three,
 			password:   "aab0ff_wfas_dhlk_fsssj",
-			want: []error{
-				errors.New("an upper case char is required"),
-			},
+			want:       []error{},
 		},
 		{
 			name:       "Lacks lowercase",
 			validation: Three,
 			password:   "ABBB_BBBB_BBBB_BB",
-			want: []error{
-				errors.New("a lower case char is required"),
-			},
+			want:       []error{},
 		},
 		{
 			name:       "Lacks underscore",
 			validation: Three,
 			password:   "Abfffwfasfdolksff0j",
-			want:       []error{errors.New("an underscore char is required")},
+			want:       []error{},
+		},
+		{
+			name:       "Validation 3",
+			validation: Three,
+			password:   "abfffwfasfdolksff0j",
+			want: []error{
+				errors.New("an upper case char is required"),
+				errors.New("an underscore char is required"),
+			},
 		},
 	}
 	for _, tt := range tests {

@@ -51,6 +51,9 @@ func validation1(password string) (errors []error) {
 	if err != nil {
 		errors = append(errors, err)
 	}
+	if len(errors) == 1 {
+		return []error{}
+	}
 	return errors
 }
 
@@ -75,6 +78,9 @@ func validation2(password string) (errors []error) {
 	if err != nil {
 		errors = append(errors, err)
 	}
+	if len(errors) == 1 {
+		return []error{}
+	}
 	return errors
 }
 func validation3(password string) (errors []error) {
@@ -97,6 +103,9 @@ func validation3(password string) (errors []error) {
 	err = check_underscore(password)
 	if err != nil {
 		errors = append(errors, err)
+	}
+	if len(errors) == 1 {
+		return []error{}
 	}
 	return errors
 }
