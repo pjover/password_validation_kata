@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"errors"
 	"unicode"
 )
 
@@ -12,7 +13,7 @@ const (
 	Three
 )
 
-func ValidatePassword(validation Validation, password string) bool {
+func ValidatePassword(validation Validation, password string) (errors []error) {
 	switch validation {
 	case One:
 		return validation1(password)
@@ -21,82 +22,122 @@ func ValidatePassword(validation Validation, password string) bool {
 	case Three:
 		return validation3(password)
 	}
-
-	return false
+	return []error{}
 }
 
-func validation1(password string) bool {
-	if len(password) < 8 {
-		return false
-	}
-	if !check_upper(password) {
-		return false
-	}
-
-	if !check_lower(password) {
-		return false
+func validation1(password string) (errors []error) {
+	errors = []error{}
+	err := check_length(password, 8)
+	if err != nil {
+		errors = append(errors, err)
 	}
 
-	return check_underscore(password) && check_contains_digit(password)
+	err = check_upper(password)
+	if err != nil {
+		errors = append(errors, err)
+	}
+
+	err = check_lower(password)
+	if err != nil {
+		errors = append(errors, err)
+	}
+
+	err = check_contains_digit(password)
+	if err != nil {
+		errors = append(errors, err)
+	}
+
+	err = check_underscore(password)
+	if err != nil {
+		errors = append(errors, err)
+	}
+	return errors
 }
 
-func validation2(password string) bool {
-	if len(password) < 7 {
-		return false
-	}
-	if !check_upper(password) {
-		return false
+func validation2(password string) (errors []error) {
+	errors = []error{}
+	err := check_length(password, 6)
+	if err != nil {
+		errors = append(errors, err)
 	}
 
-	if !check_lower(password) {
-		return false
+	err = check_upper(password)
+	if err != nil {
+		errors = append(errors, err)
 	}
-	return check_contains_digit(password)
+
+	err = check_lower(password)
+	if err != nil {
+		errors = append(errors, err)
+	}
+
+	err = check_contains_digit(password)
+	if err != nil {
+		errors = append(errors, err)
+	}
+	return errors
 }
-func validation3(password string) bool {
-	if len(password) < 17 {
-		return false
-	}
-	if !check_upper(password) {
-		return false
+func validation3(password string) (errors []error) {
+	errors = []error{}
+	err := check_length(password, 16)
+	if err != nil {
+		errors = append(errors, err)
 	}
 
-	if !check_lower(password) {
-		return false
+	err = check_upper(password)
+	if err != nil {
+		errors = append(errors, err)
 	}
-	return check_underscore(password)
+
+	err = check_lower(password)
+	if err != nil {
+		errors = append(errors, err)
+	}
+
+	err = check_underscore(password)
+	if err != nil {
+		errors = append(errors, err)
+	}
+	return errors
 }
 
-func check_contains_digit(password string) bool {
+func check_length(password string, max int) error {
+	if len(password) > max {
+		return nil
+	}
+	return errors.New("invalid length")
+}
+
+func check_contains_digit(password string) error {
 	for i := 0; i < len(password); i++ {
 		if unicode.IsDigit(rune(password[i])) {
-			return true
+			return nil
 		}
 	}
-	return false
+	return errors.New("a digit is required")
 }
 
-func check_underscore(password string) bool {
+func check_underscore(password string) error {
 	for i := 0; i < len(password); i++ {
 		if password[i] == '_' {
-			return true
+			return nil
 		}
 	}
-	return false
+	return errors.New("an underscore char is required")
 }
-func check_upper(password string) bool {
+func check_upper(password string) error {
 	for i := 0; i < len(password); i++ {
 		if unicode.IsUpper(rune(password[i])) {
-			return true
+			return nil
 		}
 	}
-	return false
+	return errors.New("an upper case char is required")
 }
-func check_lower(password string) bool {
+func check_lower(password string) error {
 	for i := 0; i < len(password); i++ {
 		if unicode.IsLower(rune(password[i])) {
-			return true
+			return nil
 		}
 	}
-	return false
+	return errors.New("a lower case char is required")
 }

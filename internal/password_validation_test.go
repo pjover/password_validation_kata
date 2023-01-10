@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"errors"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -10,103 +11,119 @@ func TestValidatePassword(t *testing.T) {
 		name       string
 		validation Validation
 		password   string
-		want       bool
+		want       []error
 	}{
 		{
 			name:       "8 characters",
 			validation: One,
-			password:   "Ab34567_",
-			want:       true,
+			password:   "Ab3456s7_",
+			want:       []error{},
 		},
 		{
 			name:       "7 characters",
 			validation: One,
-			password:   "1234",
-			want:       false,
+			password:   "Ul_234",
+			want: []error{
+				errors.New("invalid length"),
+			},
 		},
 		{
 			name:       "With capital letter",
 			validation: One,
 			password:   "Test_cap1tal",
-			want:       true,
+			want:       []error{},
 		},
 		{
 			name:       "Without capital letter",
 			validation: One,
-			password:   "test_capital",
-			want:       false,
+			password:   "test_capital0",
+			want:       []error{errors.New("an upper case char is required")},
 		},
 		{
 			name:       "With lowercase letter",
 			validation: One,
 			password:   "Test_capi4al",
-			want:       true,
+			want:       []error{},
 		},
 		{
 			name:       "Without lowercase letter",
 			validation: One,
-			password:   "AAAAAAAAA",
-			want:       false,
+			password:   "AA_0AAAAAA",
+			want: []error{
+				errors.New("a lower case char is required"),
+			},
 		},
 		{
 			name:       "Without lowercase letter",
 			validation: One,
-			password:   "AAAAAAAAA",
-			want:       false,
+			password:   "A_0AAAAAAAA",
+			want: []error{
+				errors.New("a lower case char is required"),
+			},
 		},
 		{
 			name:       "More than 6 chars",
 			validation: Two,
 			password:   "Ab3ffwf",
-			want:       true,
+			want:       []error{},
 		},
 		{
 			name:       "6 or less chars",
 			validation: Two,
 			password:   "Ab3fff",
-			want:       false,
+			want: []error{
+				errors.New("invalid length"),
+			},
 		},
 		{
 			name:       "Lacks capital letter",
 			validation: Two,
 			password:   "ab3ffwf",
-			want:       false,
+			want: []error{
+				errors.New("an upper case char is required"),
+			},
 		},
 		{
 			name:       "Lacks lowercase",
 			validation: Two,
 			password:   "AB3FFFH",
-			want:       false,
+			want: []error{
+				errors.New("a lower case char is required"),
+			},
 		},
 		{
 			name:       "Lacks number",
 			validation: Two,
 			password:   "ABxFFFH",
-			want:       false,
+			want:       []error{errors.New("a digit is required")},
 		},
 		{
 			name:       "More than 16 chars",
 			validation: Three,
 			password:   "Abff_wfas_dñlk_fj",
-			want:       true,
+			want:       []error{},
 		},
 		{
 			name:       "Lacks uppercase",
 			validation: Three,
-			password:   "abff_wfas_dhlk_fj",
-			want:       false,
+			password:   "aab0ff_wfas_dhlk_fsssj",
+			want: []error{
+				errors.New("an upper case char is required"),
+			},
 		},
 		{
 			name:       "Lacks lowercase",
 			validation: Three,
 			password:   "ABBB_BBBB_BBBB_BB",
-			want:       false,
+			want: []error{
+				errors.New("a lower case char is required"),
+			},
 		},
 		{
 			name:       "Lacks underscore",
 			validation: Three,
-			password:   "Abfffwfasfdñlkffj",
-			want:       false,
+			password:   "Abfffwfasfdolksff0j",
+			want:       []error{errors.New("an underscore char is required")},
 		},
 	}
 	for _, tt := range tests {
