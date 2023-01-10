@@ -13,7 +13,7 @@ func TestValidatePassword(t *testing.T) {
 	}{
 		{
 			name:     "8 characters",
-			password: "Ab345678",
+			password: "Ab34567_",
 			want:     true,
 		},
 		{
@@ -23,7 +23,7 @@ func TestValidatePassword(t *testing.T) {
 		},
 		{
 			name:     "With capital letter",
-			password: "Test_capital",
+			password: "Test_cap1tal",
 			want:     true,
 		},
 		{
@@ -33,7 +33,7 @@ func TestValidatePassword(t *testing.T) {
 		},
 		{
 			name:     "With lowercase letter",
-			password: "Test_capital",
+			password: "Test_capi4al",
 			want:     true,
 		},
 		{
