@@ -37,10 +37,7 @@ func validation1(password string) bool {
 		return false
 	}
 
-	if !check_underscore(password) {
-		return false
-	}
-	return check_contains_digit(password)
+	return check_underscore(password) && check_contains_digit(password)
 }
 
 func validation2(password string) bool {
