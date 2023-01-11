@@ -1,6 +1,12 @@
 # Coding Dojo: Password Validation
 
-Coding Dojo at Mallorca software crafters
+Coding Dojo at Mallorca software crafters.
 
-https://www.codurance.com/katalyst/password-validation
+Kata: [Password Validation](https://www.codurance.com/katalyst/password-validation)
+
+Developers:
+- Adrià Freixas
+- Joan Nicolau Santandreu
+- Manue Castillo
+- Pere Jover
 
